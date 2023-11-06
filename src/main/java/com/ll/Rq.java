@@ -10,7 +10,6 @@ public class Rq {
     @Getter
     private String action;
 
-    @Getter
     private Map<String, String> paramMap;
 
     public Rq(String cmd) {
@@ -33,6 +32,9 @@ public class Rq {
                 paramMap.put(paramName, paramValue);
             }
         }
+    }
 
+    public String getParam(String key) {
+        return this.paramMap.get(key);
     }
 }

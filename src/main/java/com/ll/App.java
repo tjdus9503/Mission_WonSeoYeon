@@ -1,8 +1,6 @@
 package com.ll;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -19,29 +17,36 @@ public class App {
 
         System.out.println("== 명언 앱 ==");
 
-        while (true) {
+        boolean isClosed = false;
+
+        while (!isClosed) {
             System.out.print("명령) ");
 
             String cmd = scanner.nextLine();
 
             Rq rq = new Rq(cmd);
 
-            if (cmd.equals("종료")) {
-                break;
-            } else if (cmd.equals("등록")) {
-                actionRegist();
-            } else if (cmd.equals("목록")) {
-                actionPrintList();
-            } else if (cmd.startsWith("삭제?")) {
-                actionDelete(cmd);
-            } else if (cmd.startsWith("수정?")) {
-                actionModify(cmd);
+            switch (rq.getAction()) {
+                case "종료":
+                    isClosed = true;
+                    break;
+                case "등록":
+                    actionRegist();
+                    break;
+                case "목록":
+                    actionPrintList();
+                    break;
+                case "삭제":
+                    actionDelete(rq.getParam("id"));
+                    break;
+                case "수정":
+                    actionModify(rq.getParam("id"));
+                    break;
             }
         }
     }
 
     private void actionRegist() {
-        Quotation quotation;
 
         System.out.print("명언 : ");
         String content = scanner.nextLine();
@@ -50,13 +55,14 @@ public class App {
 
         quotationId++;
 
-        quotation = new Quotation(quotationId, authorName, content);
+        Quotation quotation = new Quotation(quotationId, authorName, content);
         quotations.add(quotation);
 
         System.out.println(quotationId + "번 명언이 등록되었습니다.");
     }
 
     private void actionPrintList() {
+
         System.out.println("번호 / 작가 / 명언");
         System.out.println("------------------------");
 
@@ -69,27 +75,7 @@ public class App {
         }
     }
 
-    private void actionDelete(String cmd) {
-        //cmd : 삭제?id=1
-        String[] cmdBits = cmd.split("\\?", 2);
-
-        String action = cmdBits[0];
-        String query = cmdBits[1];
-
-        String[] queryBits = query.split("&");
-
-        Map<String, String> paramMap = new HashMap<>();
-
-        for (String queryParam : queryBits) {
-            String[] queryParamBits = queryParam.split("=", 2);
-
-            String paramName = queryParamBits[0];
-            String paramValue = queryParamBits[1];
-
-            paramMap.put(paramName, paramValue);
-        }
-
-        String id = paramMap.get("id");
+    private void actionDelete(String id) {
 
         boolean isDeleted = false;
 
@@ -109,27 +95,7 @@ public class App {
         }
     }
 
-    private void actionModify(String cmd) {
-        //cmd : 수정?id=2
-        String[] cmdBits = cmd.split("\\?", 2);
-
-        String action = cmdBits[0];
-        String query = cmdBits[1];
-
-        String[] queryBits = query.split("&");
-
-        Map<String, String> paramMap = new HashMap<>();
-
-        for (String queryParam : queryBits) {
-            String[] queryParamBits = queryParam.split("=", 2);
-
-            String paramName = queryParamBits[0];
-            String paramValue = queryParamBits[1];
-
-            paramMap.put(paramName, paramValue);
-        }
-
-        String id = paramMap.get("id");
+    private void actionModify(String id) {
 
         for (Quotation quotation : quotations) {
             if (quotation.getId() == Integer.parseInt(id)) {
