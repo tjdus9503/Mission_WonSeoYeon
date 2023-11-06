@@ -148,8 +148,39 @@ public class AppTest {
                 isDeleted = false;
             }
         }
-        assertThat(isDeleted).isEqualTo(true);
+        assertThat(isDeleted).isTrue();
+//        assertThat(quotations).extracting("id").asList().doesNotContain(1);
+
         assertThat(output).contains("1번 명언이 삭제되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
+    }
+
+    @Test
+    @DisplayName("삭제를 입력할 때 id에 해당하는 명언이 없는 경우의 메시지 출력")
+    void t7() {
+        ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
+
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                너 자신을 알라.
+                플라톤
+                목록
+                삭제?id=1
+                삭제?id=1
+                종료
+                """.stripIndent());
+
+        new App(scanner, quotations).run();
+
+        scanner.close();
+
+        String output = byteArrayOutputStream.toString();
+
+        assertThat(output).contains("1번 명언은 존재하지 않습니다.");
 
         TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
     }

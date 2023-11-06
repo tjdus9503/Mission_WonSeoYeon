@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Quotation> quotations = new ArrayList<>();
+
         new App(scanner, quotations).run();
     }
 }

@@ -55,12 +55,21 @@ public class App {
                 String[] queryBits = query.split("=");
                 String id = queryBits[1];
 
+                boolean isDeleted = false;
+
                 for (int i = 0; i < quotations.size(); i++) {
                     if (quotations.get(i).getId() == Integer.parseInt(id)) {
                         quotations.remove(i);
+
+                        isDeleted = true;
                         System.out.println(id + "번 명언이 삭제되었습니다.");
+
                         break;
                     }
+                }
+
+                if (!isDeleted) {
+                    System.out.println(id + "번 명언은 존재하지 않습니다.");
                 }
             }
         }
