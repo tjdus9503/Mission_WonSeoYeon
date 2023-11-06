@@ -3,7 +3,10 @@ package com.ll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Scanner;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AppTest {
     @Test
@@ -31,5 +34,28 @@ public class AppTest {
         new App(scanner).run();
 
         scanner.close();
+    }
+
+    @Test
+    @DisplayName("등록을 완료하면 1번 명언이 등록되었습니다. 출력")
+    void t3() {
+        ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
+
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                종료
+                """.stripIndent());
+
+        new App(scanner).run();
+
+        scanner.close();
+
+        String output = byteArrayOutputStream.toString();
+
+        assertThat(output).contains("1번 명언이 등록되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
     }
 }

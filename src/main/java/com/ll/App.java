@@ -22,6 +22,8 @@ public class App {
                 String quotation = scanner.nextLine();
                 System.out.print("작가 : ");
                 String authorName = scanner.nextLine();
+
+                System.out.println("1번 명언이 등록되었습니다.");
             }
         }
 
