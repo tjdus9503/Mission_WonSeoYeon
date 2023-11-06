@@ -1,17 +1,17 @@
 package com.ll;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
     private Scanner scanner;
-    public App(Scanner scanner) {
+    private List<Quotation> quotations;
+    public App(Scanner scanner, List<Quotation> quotations) {
         this.scanner = scanner;
+        this.quotations = quotations;
     }
 
     public void run() {
-        List<Quotation> quotations = new ArrayList<>();
         int quotationId = 0;
 
         System.out.println("== 명언 앱 ==");
@@ -46,6 +46,21 @@ public class App {
                     String quotation = quotations.get(i).getQuotation();
 
                     System.out.printf("%d / %s / %s\n", id, authorName, quotation);
+                }
+            } else if (cmd.startsWith("삭제?")) {
+                //cmd : 삭제?id=1
+                String[] cmdBits = cmd.split("\\?");
+                String query = cmdBits[1];
+
+                String[] queryBits = query.split("=");
+                String id = queryBits[1];
+
+                for (int i = 0; i < quotations.size(); i++) {
+                    if (quotations.get(i).getId() == Integer.parseInt(id)) {
+                        quotations.remove(i);
+                        System.out.println(id + "번 명언이 삭제되었습니다.");
+                        break;
+                    }
                 }
             }
         }
