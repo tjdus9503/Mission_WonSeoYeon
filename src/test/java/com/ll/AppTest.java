@@ -17,4 +17,19 @@ public class AppTest {
 
         scanner.close();
     }
+
+    @Test
+    @DisplayName("등록을 입력하면 명언과 작가를 입력받는다.")
+    void t2() {
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                종료
+                """.stripIndent());
+
+        new App(scanner).run();
+
+        scanner.close();
+    }
 }
