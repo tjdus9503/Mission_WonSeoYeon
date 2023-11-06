@@ -58,4 +58,31 @@ public class AppTest {
 
         TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
     }
+
+    @Test
+    @DisplayName("등록할 때마다 출력되는 메시지에서 명언 번호가 증가")
+    void t4() {
+        ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
+
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                너 자신을 알라
+                플라톤
+                종료
+                """.stripIndent());
+
+        new App(scanner).run();
+
+        scanner.close();
+
+        String output = byteArrayOutputStream.toString();
+
+        assertThat(output).contains("1번 명언이 등록되었습니다.");
+        assertThat(output).contains("2번 명언이 등록되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
+    }
 }
