@@ -1,6 +1,8 @@
 package com.ll;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -66,11 +68,25 @@ public class App {
 
     private void actionDelete(String cmd) {
         //cmd : 삭제?id=1
-        String[] cmdBits = cmd.split("\\?");
+        String[] cmdBits = cmd.split("\\?", 2);
+        String action = cmdBits[0];
         String query = cmdBits[1];
 
-        String[] queryBits = query.split("=");
-        String id = queryBits[1];
+        String[] queryBits = query.split("&");
+
+        Map<String, String> paramMap = new HashMap<>();
+
+        for (String queryParam : queryBits) {
+            String[] queryParamBits = queryParam.split("=", 2);
+
+            String paramName = queryParamBits[0];
+            String paramValue = queryParamBits[1];
+
+            paramMap.put(paramName, paramValue);
+
+        }
+
+        String id = paramMap.get("id");
 
         boolean isDeleted = false;
 
@@ -92,11 +108,25 @@ public class App {
 
     private void actionModify(String cmd) {
         //cmd : 수정?id=2
-        String[] cmdBits = cmd.split("\\?");
+        String[] cmdBits = cmd.split("\\?", 2);
+        String action = cmdBits[0];
         String query = cmdBits[1];
 
-        String[] queryBits = query.split("=");
-        String id = queryBits[1];
+        String[] queryBits = query.split("&");
+
+        Map<String, String> paramMap = new HashMap<>();
+
+        for (String queryParam : queryBits) {
+            String[] queryParamBits = queryParam.split("=", 2);
+
+            String paramName = queryParamBits[0];
+            String paramValue = queryParamBits[1];
+
+            paramMap.put(paramName, paramValue);
+
+        }
+
+        String id = paramMap.get("id");
 
         for (Quotation quotation : quotations) {
             if (quotation.getId() == Integer.parseInt(id)) {
