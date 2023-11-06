@@ -14,5 +14,10 @@ public class Quotation {
     private String authorName;
     @NonNull
     @Getter
-    private String quotation;
+    private String content;
+
+    public void modifyQuotation(String newAuthorName, String newContent) {
+        this.authorName = newAuthorName;
+        this.content = newContent;
+    }
 }

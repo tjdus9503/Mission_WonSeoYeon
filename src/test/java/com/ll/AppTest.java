@@ -184,4 +184,46 @@ public class AppTest {
 
         TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
     }
+
+    @Test
+    @DisplayName("수정을 입력하면 id에 해당하는 명언의 내용과 작가를 수정한다.")
+    void t8() {
+        ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
+
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                너 자신을 알라.
+                플라톤
+                목록
+                삭제?id=1
+                삭제?id=1
+                수정?id=2
+                나의 죽음을 적에게 알리지 말라.
+                이순신
+                목록
+                종료
+                """.stripIndent());
+
+        new App(scanner, quotations).run();
+
+        scanner.close();
+
+        String modifiedContent = "";
+        String modifiedAuthorName = "";
+
+        for (Quotation quotation : quotations) {
+            if (quotation.getId() == 2) {
+                modifiedContent = quotation.getContent();
+                modifiedAuthorName = quotation.getAuthorName();
+            }
+        }
+
+        assertThat(modifiedContent).isEqualTo("나의 죽음을 적에게 알리지 말라.");
+        assertThat(modifiedAuthorName).isEqualTo("이순신");
+
+        TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
+    }
 }

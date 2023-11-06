@@ -43,7 +43,7 @@ public class App {
                 for (int i = quotations.size() - 1; i >= 0 ; i--) {
                     int id = quotations.get(i).getId();
                     String authorName = quotations.get(i).getAuthorName();
-                    String quotation = quotations.get(i).getQuotation();
+                    String quotation = quotations.get(i).getContent();
 
                     System.out.printf("%d / %s / %s\n", id, authorName, quotation);
                 }
@@ -71,6 +71,30 @@ public class App {
                 if (!isDeleted) {
                     System.out.println(id + "번 명언은 존재하지 않습니다.");
                 }
+            } else if (cmd.startsWith("수정?")) {
+                //cmd : 수정?id=2
+                String[] cmdBits = cmd.split("\\?");
+                String query = cmdBits[1];
+
+                String[] queryBits = query.split("=");
+                String id = queryBits[1];
+
+                for (Quotation quotation : quotations) {
+                    if (quotation.getId() == Integer.parseInt(id)) {
+                        System.out.println("명언(기존) : " + quotation.getContent());
+                        System.out.print("명언 : ");
+                        String newContent = scanner.nextLine();
+
+                        System.out.println("작가(기존) : " + quotation.getAuthorName());
+                        System.out.print("작가 : ");
+                        String newAuthorName = scanner.nextLine();
+
+                        quotation.modifyQuotation(newAuthorName, newContent);
+
+                        break;
+                    }
+                }
+
             }
         }
 
