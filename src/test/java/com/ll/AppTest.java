@@ -37,7 +37,7 @@ public class AppTest {
     }
 
     @Test
-    @DisplayName("등록을 완료하면 1번 명언이 등록되었습니다. 출력")
+    @DisplayName("등록을 완료하면 \"1번 명언이 등록되었습니다.\" 를 출력")
     void t3() {
         ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
 
@@ -82,6 +82,36 @@ public class AppTest {
 
         assertThat(output).contains("1번 명언이 등록되었습니다.");
         assertThat(output).contains("2번 명언이 등록되었습니다.");
+
+        TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
+    }
+
+    @Test
+    @DisplayName("목록을 입력하면 등록된 명언들을 출력한다.")
+    void t5() {
+        ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
+
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                너 자신을 알라.
+                플라톤
+                목록
+                종료
+                """.stripIndent());
+
+        new App(scanner).run();
+
+        scanner.close();
+
+        String output = byteArrayOutputStream.toString();
+
+        assertThat(output).contains("번호 / 작가 / 명언");
+        assertThat(output).contains("------------------------");
+        assertThat(output).contains("2 / 플라톤 / 너 자신을 알라.");
+        assertThat(output).contains("1 / 작자미상 / 현재를 사랑하라.");
 
         TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
     }
