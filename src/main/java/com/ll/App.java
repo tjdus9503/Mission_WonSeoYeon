@@ -21,7 +21,10 @@ public class App {
 
         while (true) {
             System.out.print("명령) ");
+
             String cmd = scanner.nextLine();
+
+            Rq rq = new Rq(cmd);
 
             if (cmd.equals("종료")) {
                 break;
@@ -69,6 +72,7 @@ public class App {
     private void actionDelete(String cmd) {
         //cmd : 삭제?id=1
         String[] cmdBits = cmd.split("\\?", 2);
+
         String action = cmdBits[0];
         String query = cmdBits[1];
 
@@ -83,7 +87,6 @@ public class App {
             String paramValue = queryParamBits[1];
 
             paramMap.put(paramName, paramValue);
-
         }
 
         String id = paramMap.get("id");
@@ -109,6 +112,7 @@ public class App {
     private void actionModify(String cmd) {
         //cmd : 수정?id=2
         String[] cmdBits = cmd.split("\\?", 2);
+
         String action = cmdBits[0];
         String query = cmdBits[1];
 
@@ -123,7 +127,6 @@ public class App {
             String paramValue = queryParamBits[1];
 
             paramMap.put(paramName, paramValue);
-
         }
 
         String id = paramMap.get("id");
