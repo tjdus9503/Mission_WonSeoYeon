@@ -37,10 +37,10 @@ public class App {
                     actionPrintList();
                     break;
                 case "삭제":
-                    actionDelete(rq.getParam("id"));
+                    actionDelete(rq.getParamAsInt("id"));
                     break;
                 case "수정":
-                    actionModify(rq.getParam("id"));
+                    actionModify(rq.getParamAsInt("id"));
                     break;
             }
         }
@@ -66,6 +66,8 @@ public class App {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("------------------------");
 
+        if (!isQuotationExist()) return;
+
         for (int i = quotations.size() - 1; i >= 0 ; i--) {
             int id = quotations.get(i).getId();
             String authorName = quotations.get(i).getAuthorName();
@@ -75,30 +77,38 @@ public class App {
         }
     }
 
-    private void actionDelete(String id) {
+    private void actionDelete(int id) {
 
-        boolean isDeleted = false;
+        if (!isQuotationExist() || isWrongId(id)) return;
+
+        boolean isExistingId = false;
 
         for (int i = 0; i < quotations.size(); i++) {
-            if (quotations.get(i).getId() == Integer.parseInt(id)) {
+            if (quotations.get(i).getId() == id) {
+
+                isExistingId = true;
                 quotations.remove(i);
 
-                isDeleted = true;
                 System.out.println(id + "번 명언이 삭제되었습니다.");
 
                 break;
             }
         }
 
-        if (!isDeleted) {
-            System.out.println(id + "번 명언은 존재하지 않습니다.");
-        }
+        printIfNonExistingId(isExistingId, id);
     }
 
-    private void actionModify(String id) {
+    private void actionModify(int id) {
+
+        if (!isQuotationExist() || isWrongId(id)) return;
+
+        boolean isExistingId = false;
 
         for (Quotation quotation : quotations) {
-            if (quotation.getId() == Integer.parseInt(id)) {
+            if (quotation.getId() == id) {
+
+                isExistingId = true;
+
                 System.out.println("명언(기존) : " + quotation.getContent());
                 System.out.print("명언 : ");
                 String newContent = scanner.nextLine();
@@ -109,8 +119,38 @@ public class App {
 
                 quotation.modifyQuotation(newAuthorName, newContent);
 
+                System.out.println(id + "번 명언이 삭제되었습니다.");
+
                 break;
             }
+        }
+
+        printIfNonExistingId(isExistingId, id);
+    }
+
+    private boolean isWrongId(int id) {
+        if (id == 0) {
+            System.out.println("명언ID를 다시 확인해주세요.");
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void printIfNonExistingId(boolean isExist, int id) {
+        if (!isExist) {
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
+        }
+    }
+
+    private boolean isQuotationExist() {
+        if (quotations.size() == 0) {
+            System.out.println("등록된 명언이 없습니다.");
+            return false;
+        }
+        else {
+            return true;
         }
     }
 }

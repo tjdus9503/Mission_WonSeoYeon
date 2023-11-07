@@ -17,6 +17,7 @@ public class Rq {
 
         action = cmdBits[0];
 
+        // 쿼리가 존재할 경우
         if (cmdBits.length > 1) {
             String query = cmdBits[1];
 
@@ -24,6 +25,8 @@ public class Rq {
 
             for (String queryParam : queryBits) {
                 String[] queryParamBits = queryParam.split("=", 2);
+
+                if (queryParamBits.length < 2) continue;
 
                 String paramName = queryParamBits[0];
                 String paramValue = queryParamBits[1];
@@ -35,6 +38,18 @@ public class Rq {
     }
 
     public String getParam(String key) {
-        return this.paramMap.get(key);
+        return paramMap != null ? paramMap.get(key) : "";
+    }
+
+    public int getParamAsInt(String key) {
+        try {
+            return Integer.parseInt(paramMap.get(key));
+        }
+        catch (NullPointerException e) {
+            return 0;
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }
