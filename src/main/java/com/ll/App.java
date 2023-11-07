@@ -1,5 +1,7 @@
 package com.ll;
 
+import com.ll.domain.quotation.Quotation;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,10 +39,10 @@ public class App {
                     actionPrintList();
                     break;
                 case "삭제":
-                    actionDelete(rq.getParamAsInt("id"));
+                    actionDelete(rq);
                     break;
                 case "수정":
-                    actionModify(rq.getParamAsInt("id"));
+                    actionModify(rq);
                     break;
             }
         }
@@ -77,7 +79,9 @@ public class App {
         }
     }
 
-    private void actionDelete(int id) {
+    private void actionDelete(Rq rq) {
+
+        int id = rq.getParamAsInt("id", 0);
 
         if (!isQuotationExist() || isWrongId(id)) return;
 
@@ -98,7 +102,9 @@ public class App {
         printIfNonExistingId(isExistingId, id);
     }
 
-    private void actionModify(int id) {
+    private void actionModify(Rq rq) {
+
+        int id = rq.getParamAsInt("id", 0);
 
         if (!isQuotationExist() || isWrongId(id)) return;
 

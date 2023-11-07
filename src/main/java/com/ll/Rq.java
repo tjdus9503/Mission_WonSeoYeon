@@ -1,5 +1,6 @@
 package com.ll;
 
+import com.ll.standard.util.Ut;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -41,15 +42,10 @@ public class Rq {
         return paramMap != null ? paramMap.get(key) : "";
     }
 
-    public int getParamAsInt(String key) {
-        try {
-            return Integer.parseInt(paramMap.get(key));
-        }
-        catch (NullPointerException e) {
-            return 0;
-        }
-        catch (NumberFormatException e) {
-            return 0;
-        }
+    public int getParamAsInt(String paramName, int defaultValue) {
+
+        if (paramMap == null) return defaultValue;
+
+        return Ut.Str.parseInt(paramMap.get(paramName), defaultValue);
     }
 }

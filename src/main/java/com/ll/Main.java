@@ -1,5 +1,7 @@
 package com.ll;
 
+import com.ll.domain.quotation.Quotation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
