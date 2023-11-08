@@ -3,6 +3,7 @@ package com.ll;
 import com.ll.base.App;
 import com.ll.domain.quotation.Quotation;
 import com.ll.standard.testUtil.TestUtil;
+import com.ll.standard.util.FileUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -333,26 +334,10 @@ public class AppTest {
 
         scanner.close();
 
-        StringBuilder sb = new StringBuilder();
+        String fileName = "data.json";
 
-        try {
-            String fileName = "data.json";
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line;
+        String jsonContent = FileUtil.readFile(fileName);
 
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-
-            reader.close();
-
-            System.out.println("data.json 읽기 성공");
-        }
-        catch (IOException e) {
-            System.out.println("data.json 읽기 오류");
-        }
-
-        String jsonContent = sb.toString();
         String expectedValue = "[{\"id\":1,\"authorName\":\"플라톤\",\"content\":\"너 자신을 알라.\"},{\"id\":2,\"authorName\":\"이순신\",\"content\":\"나의 죽음을 적에게 알리지 말라.\"}]";
 
         assertThat(jsonContent).isEqualTo(expectedValue);

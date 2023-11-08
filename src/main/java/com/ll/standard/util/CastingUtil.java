@@ -1,6 +1,6 @@
 package com.ll.standard.util;
 
-public class Ut {
+public class CastingUtil {
     public static class Str {
         public static int parseInt(String value, int defaultValue) {
             try {

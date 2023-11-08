@@ -28,7 +28,6 @@ public class App {
     public void run() {
 
         QuotationController quotationController = new QuotationController(scanner, quotations);
-
         boolean isClosed = false;
 
         System.out.println("== 명언 앱 ==");
@@ -39,7 +38,6 @@ public class App {
             System.out.print("명령) ");
 
             String cmd = scanner.nextLine();
-
             Rq rq = new Rq(cmd);
 
             switch (rq.getAction()) {

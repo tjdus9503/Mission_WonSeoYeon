@@ -1,10 +1,10 @@
 package com.ll.domain.quotation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.base.Rq;
-import com.ll.standard.util.Ut;
+import com.ll.standard.util.BuildUtil;
+import com.ll.standard.util.CastingUtil;
+import com.ll.standard.util.FileUtil;
 
-import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,60 +20,45 @@ public class QuotationController {
     }
 
     public void actionLoad() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("quotations.txt"));
-            String line;
-            boolean isStartLine = true;
+        String fileContent = FileUtil.readFile("quotations.txt");
 
-            while ((line = reader.readLine()) != null) {
+        String[] lines = fileContent.trim().split("\n");
 
-                if (isStartLine) {
-                    quotationId = Ut.Str.parseInt(line, 0);
-                    isStartLine = false;
-                } else {
-                    String[] lineBits = line.split(",");
+        quotationId = CastingUtil.Str.parseInt(lines[0], 0);
 
-                    if (lineBits.length != 3) continue; // 필드 개수 체크
+        for (int i = 1; i < lines.length; i++) {
+            String line = lines[i];
 
-                    int id = Ut.Str.parseInt(lineBits[0], 0);
-                    String authorName = lineBits[1];
-                    String content = lineBits[2];
+            String[] lineBits = line.split(",");
 
-                    if (id == 0) continue; // id가 0이면 오류가 발생했거나, 잘못된 데이터
+            if (lineBits.length != 3) continue; // 필드 개수 체크
 
-                    Quotation quotation = new Quotation(id, authorName, content);
+            int id = CastingUtil.Str.parseInt(lineBits[0], 0);
+            String authorName = lineBits[1];
+            String content = lineBits[2];
 
-                    quotations.add(quotation);
-                }
-            }
+            if (id == 0) continue; // id가 0이면 오류가 발생했거나, 잘못된 데이터
 
-            reader.close();
+            Quotation quotation = new Quotation(id, authorName, content);
 
-            System.out.println("파일 로드 성공");
-        }
-        catch (IOException e) {
-            System.out.println("파일 읽기 오류");
+            quotations.add(quotation);
         }
     }
 
     public void actionSave() {
+        String fileName = "quotations.txt";
+        String fileContent = "";
+        StringBuilder sb = new StringBuilder();
 
-        try {
-            PrintWriter writer = new PrintWriter("quotations.txt", "UTF-8");
+        sb.append(quotationId + "\n");
 
-            writer.println(quotationId);
-
-            for (Quotation q : quotations) {
-                writer.printf("%d,%s,%s\n", q.getId(), q.getAuthorName(), q.getContent());
-            }
-
-            writer.close();
-            
-            System.out.println("파일 저장 성공");
+        for (Quotation q : quotations) {
+            sb.append(String.format("%d,%s,%s\n", q.getId(), q.getAuthorName(), q.getContent()));
         }
-        catch (IOException e) {
-            System.out.println("파일 쓰기 오류");
-        }
+
+        fileContent = sb.toString();
+
+        FileUtil.writeFile(fileName, fileContent);
     }
 
     public void actionRegist() {
@@ -163,25 +148,10 @@ public class QuotationController {
     }
 
     public void actionBuild() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonData = "";
-
-        try {
-            jsonData = objectMapper.writeValueAsString(quotations);
-        }
-        catch (IOException e) {
-            System.out.println("JSON 변환 오류");
-        }
-
         String fileName = "data.json";
+        String jsonData = BuildUtil.toJsonAsString(quotations);
 
-        try (FileWriter fileWriter = new FileWriter(fileName)) {
-            fileWriter.write(jsonData);
-            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
-        }
-        catch (IOException e) {
-            System.out.println("JSON 파일 저장 오류");
-        }
+        FileUtil.writeFile(fileName, jsonData);
     }
 
     private boolean isQuotationExist() {

@@ -1,6 +1,6 @@
 package com.ll.base;
 
-import com.ll.standard.util.Ut;
+import com.ll.standard.util.CastingUtil;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -46,6 +46,6 @@ public class Rq {
 
         if (paramMap == null) return defaultValue;
 
-        return Ut.Str.parseInt(paramMap.get(paramName), defaultValue);
+        return CastingUtil.Str.parseInt(paramMap.get(paramName), defaultValue);
     }
 }
