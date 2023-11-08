@@ -1,7 +1,12 @@
 package com.ll.domain.quotation;
 
-import com.ll.Rq;
+import com.ll.base.Rq;
+import com.ll.standard.util.Ut;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,6 +19,64 @@ public class QuotationController {
     public QuotationController (Scanner scanner, List<Quotation> quotations) {
         this.scanner = scanner;
         this.quotations = quotations;
+    }
+
+    public void actionLoad() {
+//        (1)파일 로드 기능
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("quotations.txt"));
+            String line;
+            boolean isStartLine = true;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (isStartLine) {
+                    quotationId = Ut.Str.parseInt(line, 0);
+                    isStartLine = false;
+                } else {
+                    String[] lineBits = line.split(",");
+
+                    if (lineBits.length != 3) continue; // 필드 개수 체크
+
+                    int id = Ut.Str.parseInt(lineBits[0], 0);
+                    String authorName = lineBits[1];
+                    String content = lineBits[2];
+
+                    if (id == 0) continue; // id가 0이면 오류가 발생했거나, 잘못된 데이터
+
+                    Quotation quotation = new Quotation(id, authorName, content);
+
+                    quotations.add(quotation);
+                }
+            }
+
+            reader.close();
+
+            System.out.println("파일 로드 성공");
+        }
+        catch (IOException e) {
+            System.out.println("파일 읽기 오류");
+        }
+    }
+
+    public void actionSave() {
+
+        try {
+            PrintWriter writer = new PrintWriter("quotations.txt", "UTF-8");
+
+            writer.println(quotationId);
+
+            for (Quotation q : quotations) {
+                writer.printf("%d,%s,%s\n", q.getId(), q.getAuthorName(), q.getContent());
+            }
+
+            writer.close();
+            
+            System.out.println("파일 저장 성공");
+        }
+        catch (IOException e) {
+            System.out.println("파일 쓰기 오류");
+        }
     }
 
     public void actionRegist() {
@@ -65,6 +128,10 @@ public class QuotationController {
         }
 
         printIfNonExistingId(isExistingId, id);
+    }
+
+    public void actionDeleteAll() {
+        quotations.clear();
     }
 
     public void actionModify(Rq rq) {
