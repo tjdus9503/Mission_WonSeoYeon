@@ -62,6 +62,9 @@ public class App {
                 case "수정":
                     quotationController.actionModify(rq);
                     break;
+                case "빌드":
+                    quotationController.actionBuild();
+                    break;
             }
         }
     }

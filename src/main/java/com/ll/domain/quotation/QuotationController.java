@@ -1,12 +1,10 @@
 package com.ll.domain.quotation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.base.Rq;
 import com.ll.standard.util.Ut;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +20,6 @@ public class QuotationController {
     }
 
     public void actionLoad() {
-//        (1)파일 로드 기능
         try {
             BufferedReader reader = new BufferedReader(new FileReader("quotations.txt"));
             String line;
@@ -163,6 +160,28 @@ public class QuotationController {
         }
 
         printIfNonExistingId(isExistingId, id);
+    }
+
+    public void actionBuild() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonData = "";
+
+        try {
+            jsonData = objectMapper.writeValueAsString(quotations);
+        }
+        catch (IOException e) {
+            System.out.println("JSON 변환 오류");
+        }
+
+        String fileName = "data.json";
+
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
+            fileWriter.write(jsonData);
+            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+        }
+        catch (IOException e) {
+            System.out.println("JSON 파일 저장 오류");
+        }
     }
 
     private boolean isQuotationExist() {

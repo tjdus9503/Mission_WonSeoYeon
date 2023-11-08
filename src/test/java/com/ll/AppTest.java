@@ -6,10 +6,7 @@ import com.ll.standard.testUtil.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -309,6 +306,56 @@ public class AppTest {
 
         assertThat(output).contains("2 / 작자미상 / 과거에 집착하지 마라.");
         assertThat(output).contains("1 / 작자미상 / 현재를 사랑하라.");
+
+        TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
+    }
+
+    @Test
+    @DisplayName("빌드를 입력하면 data.json 파일로 명언 데이터를 저장한다.")
+    void t10() {
+
+        clearFile();
+
+        ByteArrayOutputStream byteArrayOutputStream = TestUtil.setOutToByteArray();
+
+        Scanner scanner = TestUtil.genScanner("""
+                등록
+                너 자신을 알라.
+                플라톤
+                등록
+                나의 죽음을 적에게 알리지 말라.
+                이순신
+                빌드
+                종료
+                """.stripIndent());
+
+        new App(scanner, quotations).run();
+
+        scanner.close();
+
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            String fileName = "data.json";
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            reader.close();
+
+            System.out.println("data.json 읽기 성공");
+        }
+        catch (IOException e) {
+            System.out.println("data.json 읽기 오류");
+        }
+
+        String jsonContent = sb.toString();
+        String expectedValue = "[{\"id\":1,\"authorName\":\"플라톤\",\"content\":\"너 자신을 알라.\"},{\"id\":2,\"authorName\":\"이순신\",\"content\":\"나의 죽음을 적에게 알리지 말라.\"}]";
+
+        assertThat(jsonContent).isEqualTo(expectedValue);
 
         TestUtil.clearSetOutToByteArray(byteArrayOutputStream);
     }
